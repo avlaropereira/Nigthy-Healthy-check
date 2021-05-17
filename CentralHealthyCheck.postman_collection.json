@@ -26,12 +26,12 @@
 					"basic": [
 						{
 							"key": "password",
-							"value": "QUE5QkNGRDM3QjE0NERDRjg3RUNDRUNDQjE4NTkzNTc=",
+							"value": "{{NicePassword}}",
 							"type": "string"
 						},
 						{
 							"key": "username",
-							"value": "internal@inContact Inc.",
+							"value": "{{NiceUsername}}",
 							"type": "string"
 						}
 					]
