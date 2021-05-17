@@ -1,3 +1,6 @@
 Central.json
 Userhub.json
 CentralAccess.postman_environment.json
+test.*
+package-lock.json
+node_modules/
