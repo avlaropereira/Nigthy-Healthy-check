@@ -1,0 +1,227 @@
+{
+	"info": {
+		"_postman_id": "6dea0ce0-26b6-41c4-ad0c-5275dfd04216",
+		"name": "CentralSkillsCheck",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Central_Authentication",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.globals.set(\"TOKEN\",data.access_token);\r",
+							"pm.globals.set(\"AGENT_ID\",data.agent_id);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check access_token Not Null Or Empty\", function() {\r",
+							"    pm.expect(data.access_token).to.not.be.null; \r",
+							"    pm.expect(data.access_token).to.not.be.empty;  \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check token_type Is Equals To Bearer\", function() { \r",
+							"    pm.expect(data.token_type).to.equal(\"bearer\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check expires_in Is Equals To 3600 \", function() {\r",
+							"    pm.expect(data.expires_in).to.equal(3600);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check agent_id Not Null Or Empty\", function() {\r",
+							"    pm.expect(data.agent_id).to.not.be.null;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check team_id Not Null Or Empty\", function() {\r",
+							"    pm.expect(data.team_id).to.not.be.null; \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check bus_no Not Null Or Empty\", function() {\r",
+							"    pm.expect(data.bus_no).to.not.be.null; \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{NicePassword}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{NiceUsername}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"grant_type\": \"password\",\r\n    \"username\": \"{{USERNAME}}\",\r\n    \"password\": \"{{PASSWORD}}\",\r\n    \"isMockEvolve\": false,\r\n    \"scope\": \"RealTimeApi ChatApi CustomApi AdminApi AgentApi ReportingApi AuthenticationApi\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/InContactAuthorizationServer/Token",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"InContactAuthorizationServer",
+						"Token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Central_Chat_Skill",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var agentSkills = pm.response.json().resultSet.agentSkillAssignments;\r",
+							"var agentId = JSON.stringify(pm.globals.get(\"AGENT_ID\"));\r",
+							"\r",
+							"const getAgentId = (agent_Id) => {\r",
+							"    return agentSkills.find(a => a.agentId === agentId)\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(`Check That Chat Skill Is Assigned to Agent ${agentId}`, () => {\r",
+							"    let agent = getAgentId(agentId);\r",
+							"    pm.expect(agent.agentId).to.eql(agentId)\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/InContactAPI/services/v7.0/skills/{{chat_id}}/agents",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"InContactAPI",
+						"services",
+						"v7.0",
+						"skills",
+						"{{chat_id}}",
+						"agents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Central_IBPhone_Skill",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var agentSkills = pm.response.json().resultSet.agentSkillAssignments;\r",
+							"var agentId = JSON.stringify(pm.globals.get(\"AGENT_ID\"));\r",
+							"\r",
+							"const getAgentId = (agent_Id) => {\r",
+							"    return agentSkills.find(a => a.agentId === agentId)\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(`Check That IBphone Skill Is Assigned to Agent ${agentId}`, () => {\r",
+							"    let agent = getAgentId(agentId);\r",
+							"    pm.expect(agent.agentId).to.eql(agentId)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/InContactAPI/services/v7.0/skills/{{phone_id}}/agents",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"InContactAPI",
+						"services",
+						"v7.0",
+						"skills",
+						"{{phone_id}}",
+						"agents"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
