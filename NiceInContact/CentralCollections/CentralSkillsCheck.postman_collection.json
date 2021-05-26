@@ -150,7 +150,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}/InContactAPI/services/v7.0/skills/{{chat_id}}/agents",
+					"raw": "{{URL}}/InContactAPI/services/v7.0/skills/{{CHAT_ID}}/agents",
 					"host": [
 						"{{URL}}"
 					],
@@ -159,7 +159,7 @@
 						"services",
 						"v7.0",
 						"skills",
-						"{{chat_id}}",
+						"{{CHAT_ID}}",
 						"agents"
 					]
 				}
@@ -207,7 +207,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}/InContactAPI/services/v7.0/skills/{{phone_id}}/agents",
+					"raw": "{{URL}}/InContactAPI/services/v7.0/skills/{{IBPHONE_ID}}/agents",
 					"host": [
 						"{{URL}}"
 					],
@@ -216,7 +216,7 @@
 						"services",
 						"v7.0",
 						"skills",
-						"{{phone_id}}",
+						"{{IBPHONE_ID}}",
 						"agents"
 					]
 				}
