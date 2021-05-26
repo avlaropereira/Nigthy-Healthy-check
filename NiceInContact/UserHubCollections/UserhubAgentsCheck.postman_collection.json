@@ -1,0 +1,302 @@
+{
+	"info": {
+		"_postman_id": "197bc674-d1f5-4226-b413-91d7ee19e9cd",
+		"name": "UserhubAgentsCheck",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Userhub_Authentication",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.globals.set(\"TOKEN\",data.access_token);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check access_token Not Null Or Empty\", function() {\r",
+							"    pm.expect(data.access_token).to.not.be.null; \r",
+							"    pm.expect(data.access_token).to.not.be.empty;  \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check token_type Is Equals To Bearer\", function() { \r",
+							"    pm.expect(data.token_type).to.equal(\"bearer\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check expires_in Is Equals To 3600 \", function() {\r",
+							"    pm.expect(data.expires_in).to.equal(3600);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check agent_id Not Null Or Empty\", function() {\r",
+							"    pm.expect(data.agent_id).to.not.be.null;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check team_id Not Null Or Empty\", function() {\r",
+							"    pm.expect(data.team_id).to.not.be.null; \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check bus_no Not Null Or Empty\", function() {\r",
+							"    pm.expect(data.bus_no).to.not.be.null; \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{NicePassword}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{NiceUsername}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"grant_type\": \"password\",\r\n    \"username\": \"{{USERNAME}}\",\r\n    \"password\": \"{{PASSWORD}}\",\r\n    \"isMockEvolve\": false,\r\n    \"scope\": \"RealTimeApi ChatApi CustomApi AdminApi AgentApi ReportingApi AuthenticationApi\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/InContactAuthorizationServer/Token",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"InContactAuthorizationServer",
+						"Token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Userhub_Start_Agent_Session",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.globals.set(\"SESSION\",data.sessionId);\r",
+							"\r",
+							"pm.test(\"Check Session Id Not Null Or Empty\", function () {\r",
+							"    pm.expect(data.sessionId).to.not.be.null; \r",
+							"    pm.expect(data.sessionId).to.not.be.empty; \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Start Agent Session with code 202\", function () {\r",
+							"    pm.response.to.have.status(202);\r",
+							"    pm.globals.set(\"STATUS\",\"Available\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"stationID\": null,\r\n    \"stationPhoneNumber\": \"{{PHONE}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/InContactAPI/services/v3.0/agent-sessions",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"InContactAPI",
+						"services",
+						"v3.0",
+						"agent-sessions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Userhub_Change_Agent_Status",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Check Response Body Is Emphy\", function () {\r",
+							"    pm.expect(data).to.be.empty; \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Agent Change Status With Code 202\", function () {\r",
+							"    pm.response.to.have.status(202);\r",
+							"});\r",
+							"\r",
+							"if(pm.globals.get(\"STATUS\") == \"Available\"){\r",
+							"    pm.globals.set(\"STATUS\",\"Unavailable\");\r",
+							"    postman.setNextRequest(\"Central_Change_Agent_Status\");\r",
+							"} "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"state\": \"{{STATUS}}\",\r\n    \"reason\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/InContactAPI/services/v3.0/agent-sessions/{{SESSION}}/state",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"InContactAPI",
+						"services",
+						"v3.0",
+						"agent-sessions",
+						"{{SESSION}}",
+						"state"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Userhub_Delete_Agent_Session",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Agent finished with code 202\", function () {\r",
+							"    pm.response.to.have.status(202);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check Response boby is emphy\", function () {\r",
+							"    pm.expect(data).to.be.empty; \r",
+							"});\r",
+							"//Tear down\r",
+							"pm.globals.unset(\"TOKEN\");\r",
+							"pm.globals.unset(\"STATUS\");\r",
+							"pm.globals.unset(\"SESSION\");\r",
+							"pm.globals.unset(\"TOKEN\");\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"forceLogoff\": true,\r\n    \"endContacts\": true,\r\n    \"ignorePersonalQueue\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/InContactAPI/services/v3.0/agent-sessions/{{SESSION}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"InContactAPI",
+						"services",
+						"v3.0",
+						"agent-sessions",
+						"{{SESSION}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

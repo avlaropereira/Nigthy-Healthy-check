@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "753ee488-eecc-4408-99cf-8a4338fdc6de",
-		"name": "UserhubHealtlyCheck",
+		"name": "UserhubAuthenticationCheck",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -12,8 +12,35 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
+							" var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Authentication is Code 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check Token Not Null Or Empty\", function() {\r",
+							"    pm.expect(data.token).to.not.be.null; \r",
+							"    pm.expect(data.token).to.not.be.empty;  \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check Expires_In Is Equals To 3600 \", function() {\r",
+							"    pm.expect(data.tokenExpirationTimeSec).to.equal(3600);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check refreshTokenExpirationTimeSec Is Equals to 7200\", function() {\r",
+							"    pm.expect(data.refreshTokenExpirationTimeSec).to.equal(7200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check tenantId Not Null\", function() {\r",
+							"    pm.expect(data.tenantId).to.not.be.null; \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check sessionId Not Null\", function() {\r",
+							"    pm.expect(data.sessionId).to.not.be.null; \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check authCode Not Null\", function() {\r",
+							"    pm.expect(data.authCode).to.not.be.null; \r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -25,7 +52,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"{{USERNAME}}\",\r\n    \"password\": \"{{PASSWORD}}\",\r\n    \"getUserDetails\": true\r\n}",
+					"raw": "{\r\n    \"email\": \"Agent01.ReportingGBU.DO0090.6@niceincontact.com\",\r\n    \"password\": \"j!sFcWDpW92NgA9p8\",\r\n    \"getUserDetails\": false\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -33,9 +60,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{URL}}/public/authentication/v1/login",
+					"raw": "https://na1.dev.nice-incontact.com/public/authentication/v1/login",
+					"protocol": "https",
 					"host": [
-						"{{URL}}"
+						"na1",
+						"dev",
+						"nice-incontact",
+						"com"
 					],
 					"path": [
 						"public",
