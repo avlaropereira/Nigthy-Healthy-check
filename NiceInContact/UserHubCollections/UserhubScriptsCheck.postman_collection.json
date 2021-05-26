@@ -100,7 +100,7 @@
 			"response": []
 		},
 		{
-			"name": "Userhub_Chat_Skill",
+			"name": "Userhub_Scripts",
 			"event": [
 				{
 					"listen": "test",
