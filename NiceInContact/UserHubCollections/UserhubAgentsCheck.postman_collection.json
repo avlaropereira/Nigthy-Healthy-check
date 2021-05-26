@@ -188,7 +188,7 @@
 							"\r",
 							"if(pm.globals.get(\"STATUS\") == \"Available\"){\r",
 							"    pm.globals.set(\"STATUS\",\"Unavailable\");\r",
-							"    postman.setNextRequest(\"Central_Change_Agent_Status\");\r",
+							"    postman.setNextRequest(\"Userhub_Change_Agent_Status\");\r",
 							"} "
 						],
 						"type": "text/javascript"
